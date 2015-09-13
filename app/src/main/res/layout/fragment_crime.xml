@@ -1,0 +1,51 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.bawanj.criminalIntent.fragment.CrimeFragment">
+    <!-- Although the LinearLayout is the root element of a layout,
+     it is still a widget with a parent and has layout parameters.
+     These attributes will be used by the LinearLayout's parent layout
+     (FrameLayout in CrimeActivity) when it is inflated -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crime_title_label"
+        style="?android:listSeparatorTextViewStyle"/>
+    <!-- the style created by android -->
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_title"
+        android:hint="@string/crime_title_hint"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crime_details_label"
+        style="?android:listSeparatorTextViewStyle"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_date"
+        android:layout_marginLeft="@dimen/marginLeft"
+        android:layout_marginRight="@dimen/marginRight"/>
+    <!-- margins specify the distances between views(Widgets),
+     in this case(layout_): Button and LinearLayout -->
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_solved"
+        android:layout_marginLeft="@dimen/marginLeft"
+        android:layout_marginRight="@dimen/marginRight"
+        android:text="@string/crime_solved_label"/>
+    <!-- an attribute's name begins with layout_    : it is a direction to that widget's parent -->
+    <!-- an attribute's name begins without layout_ : it is a direction to that widget  -->
+
+</LinearLayout>

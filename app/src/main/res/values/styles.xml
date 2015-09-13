@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+
+    <!-- Text Style-->
+    <style name="BigTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">3dp</item>
+        <!-- padding: distance between View and Content -->
+    </style>
+
+
+
+</resources>
