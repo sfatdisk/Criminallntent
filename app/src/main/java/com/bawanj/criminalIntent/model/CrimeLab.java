@@ -12,7 +12,7 @@ import java.util.UUID;
  * Created by jeffreychou on 9/12/15.
  *
  */
-public class CrimeLab {
+public class CrimeLab {  // create mCrimeList
 
     private static CrimeLab sCrimeLab;
     private List<Crime> mCrimeList;
@@ -48,4 +48,5 @@ public class CrimeLab {
         }
         return null;
     }
+
 }
