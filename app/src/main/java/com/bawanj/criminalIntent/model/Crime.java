@@ -6,10 +6,11 @@ import java.util.UUID;
 
 public class Crime {
 
-    private UUID mId;
+    private UUID mId; // a great idea to find the crime in the list
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    // TODO -- Index add
 
     public Crime(){ // purpose is to initialize variables
         // Generate unique id

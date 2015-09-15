@@ -9,11 +9,11 @@ import java.util.Locale;
  */
 public class TimeUtils {
 
-    public static String getCurDateYear(String srcTime){ // Sat Sep 12 22:56:37 GMT 2015
+    public static String getCurDateYear(String srcTime){ // Sat Sep 12 22:56:37 EDT 2015
 
         Date date= null;
-        SimpleDateFormat inFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT' yyyy", Locale.US);
-        SimpleDateFormat outFormat= new SimpleDateFormat("EEEE',' MMM dd',' yyyy", Locale.US);
+        SimpleDateFormat inFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'EDT' yyyy", Locale.US);
+        SimpleDateFormat outFormat= new SimpleDateFormat("EEE',' MMM dd',' yyyy", Locale.US);
 
         try{
             date = inFormat.parse(srcTime);

@@ -1,8 +1,11 @@
 package com.bawanj.criminalIntent.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,14 +21,20 @@ import com.bawanj.criminalIntent.model.Crime;
 import com.bawanj.criminalIntent.model.CrimeLab;
 import com.bawanj.criminalIntent.utils.TimeUtils;
 
+import java.util.Date;
 import java.util.UUID;
 
 
 public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID= "crime_id" ;
+    private static final String DIALOG_DATE = "DialogDate" ;
+
+    private static final int REQUEST_DATE= 0; // setTargetFragment(), requestCode
 
     private Crime mCrime;
+
+    private Button mDateButton;
 
     public static CrimeFragment newInstance( UUID crimeId ){
 
@@ -65,10 +74,21 @@ public class CrimeFragment extends Fragment {
                         mCrime.setSolved(isChecked);
                     }
                 });
-        final Button mDateButton = (Button)rootView.findViewById(R.id.crime_date);
-        String srcDateTime= mCrime.getDate().toString();
-        mDateButton.setText(TimeUtils.getCurDateYear(srcDateTime));
-        mDateButton.setEnabled(false);
+
+        mDateButton = (Button)rootView.findViewById(R.id.crime_date);
+        updateButton();
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+
+                DatePickerFragment dialog=
+                        DatePickerFragment.newInstance( mCrime.getDate() );
+                dialog.setTargetFragment( CrimeFragment.this, REQUEST_DATE );
+                // a connection with CrimeFragment and DatePickerFragment
+                dialog.show(fm , DIALOG_DATE);
+            }
+        });
 
         final EditText mTitleFiled = (EditText) rootView.findViewById(R.id.crime_title);
         mTitleFiled.setText(mCrime.getTitle());
@@ -90,6 +110,24 @@ public class CrimeFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override // from DatePickerFragment.sendResult()
+    public void onActivityResult( int requestCode, int resultCode, Intent data ){
+        if(resultCode != Activity.RESULT_OK){
+            return ;
+        }
+        if(requestCode==REQUEST_DATE){
+            Date date= (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            updateButton();
+        }
+    }
+
+    private void updateButton(){
+        String srcTime= mCrime.getDate().toString();
+        mDateButton.setText( TimeUtils.getCurDateYear(srcTime) );
     }
 
 

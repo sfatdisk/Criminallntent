@@ -13,19 +13,13 @@ import java.util.UUID;
  *
  */
 public class CrimeLab {  // create mCrimeList
+    //TODO- can setup a hashMap for lookup the crime object
 
     private static CrimeLab sCrimeLab;
     private List<Crime> mCrimeList;
 
     private CrimeLab(Context context){
         mCrimeList= new ArrayList<>();
-
-        for(int i=0; i<100; ++i){
-            Crime crime= new Crime();
-            crime.setTitle("Crime #"+i );
-            crime.setSolved(i % 2 == 0 );
-            mCrimeList.add(crime);
-        }
     }
 
     public static synchronized CrimeLab getInstance(){
@@ -35,11 +29,15 @@ public class CrimeLab {  // create mCrimeList
         return sCrimeLab;
     }
 
+    public void addCrime(Crime c){
+        mCrimeList.add(c);
+    }
+
     public List<Crime> getCrimeList() {
         return mCrimeList;
     }
 
-    public Crime getCrime( UUID id ){
+    public Crime getCrime( UUID id ){ // use hashMap
 
         for(Crime crime : mCrimeList){
             if( crime.getId().equals(id) ){
