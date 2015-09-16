@@ -10,18 +10,9 @@
      These attributes will be used by the LinearLayout's parent layout
      (FrameLayout in CrimeActivity) when it is inflated -->
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/crime_title_label"
-        style="?android:listSeparatorTextViewStyle"/>
-    <!-- the style created by android -->
+    <include
+        layout="@layout/view_camera_and_title"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/crime_title"
-        android:hint="@string/crime_title_hint"/>
 
     <TextView
         android:layout_width="match_parent"
