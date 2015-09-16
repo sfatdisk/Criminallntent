@@ -3,7 +3,11 @@ package com.bawanj.criminalIntent.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -16,6 +20,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.bawanj.criminalIntent.R;
 import com.bawanj.criminalIntent.model.Crime;
@@ -31,17 +37,22 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID= "crime_id" ;
     private static final String DIALOG_DATE = "DialogDate" ;
 
-    private static final int REQUEST_DATE= 0; // setTargetFragment(), requestCode
+    private static final int REQUEST_DATE= 0;    // setTargetFragment(), requestCode
+    private static final int REQUEST_CONTACT= 1; // intent shoot contact app
 
     private Crime mCrime;
 
     private Button mDateButton;
     private Button mReportButton;
+    private Button mSuspectButton;
+
+    private ImageView mPhotoView;
+    private ImageButton mPhotoButton;
 
     public static CrimeFragment newInstance( UUID crimeId ){
 
         Bundle args = new Bundle();
-        args.putSerializable( ARG_CRIME_ID , crimeId );
+        args.putSerializable(ARG_CRIME_ID, crimeId);
 
         CrimeFragment crimeFragment= new CrimeFragment();
         crimeFragment.setArguments(args);
@@ -82,12 +93,12 @@ public class CrimeFragment extends Fragment {
                         mCrime.setSolved(isChecked);
                     }
                 });
-
+        // ---
         mDateButton = (Button)rootView.findViewById(R.id.crime_date);
         updateButton();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // TODO -- challenge: make a TimePicker button
                 FragmentManager fm = getFragmentManager();
 
                 DatePickerFragment dialog =
@@ -97,11 +108,11 @@ public class CrimeFragment extends Fragment {
                 dialog.show(fm, DIALOG_DATE);
             }
         });
-
+        // ---
         mReportButton = (Button)rootView.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  // TODO -- Challenge: use ShareCompat to build intent
                 Intent intent= new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
@@ -111,6 +122,30 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        final Intent pickContact  // TODO -- challenge: Another Implicit Intent
+                = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        mSuspectButton= (Button)rootView.findViewById(R.id.crime_suspect);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivityForResult(pickContact, REQUEST_CONTACT);
+            }
+        });
+
+        if( mCrime.getSuspect() != null ){// ?? go to onActivityResult first
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
+        // if user does not have a contact app
+        PackageManager packageManager= getActivity().getPackageManager();
+        if( packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) ==null ){
+            mSuspectButton.setEnabled(false);
+        }
+        // --
+        mPhotoButton = (ImageButton)rootView.findViewById(R.id.crime_camera);
+        mPhotoView = (ImageView) rootView.findViewById(R.id.crime_photo);
+
+        // ---
         final EditText mTitleFiled = (EditText) rootView.findViewById(R.id.crime_title);
         mTitleFiled.setText(mCrime.getTitle());
         mTitleFiled.addTextChangedListener(new TextWatcher() {
@@ -138,11 +173,29 @@ public class CrimeFragment extends Fragment {
         if(resultCode != Activity.RESULT_OK){
             return ;
         }
-        if(requestCode==REQUEST_DATE){
+        if(requestCode == REQUEST_DATE ){
             Date date= (Date) data
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateButton();
+        }else if(requestCode == REQUEST_CONTACT && data != null ){
+            Uri contactUri= data.getData(); // content://com.android.contacts/contacts/lookup/1490i237e619c8ae849e6.1111i4492/896
+            // make a query to access the app's content provider
+            String[] queryFields= new String[]{ContactsContract.Contacts.DISPLAY_NAME}; // projection "display_name"
+            Cursor cursor= getActivity()
+                    .getContentResolver()
+                    .query(contactUri,queryFields, null, null, null);
+            try{
+                if(cursor.getCount()==0){
+                    return;
+                }
+                cursor.moveToFirst();
+                String suspect= cursor.getString(0);  // "suspect's name"
+                mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
+            }finally {
+                cursor.close();
+            }
         }
     }
 
@@ -151,7 +204,7 @@ public class CrimeFragment extends Fragment {
         mDateButton.setText( TimeUtils.getCurDateYear(srcTime) );
     }
 
-    private String getCrimeReport(){
+    private String getCrimeReport(){ // mReportButton
 
         String solvedString= null;
 
