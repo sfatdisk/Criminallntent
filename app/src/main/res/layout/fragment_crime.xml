@@ -48,4 +48,20 @@
     <!-- an attribute's name begins with layout_    : it is a direction to that widget's parent -->
     <!-- an attribute's name begins without layout_ : it is a direction to that widget  -->
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_suspect"
+        android:layout_marginLeft="@dimen/marginLeft"
+        android:layout_marginRight="@dimen/marginRight"
+        android:text="@string/crime_suspect_text"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crime_report"
+        android:layout_marginLeft="@dimen/marginLeft"
+        android:layout_marginRight="@dimen/marginRight"
+        android:text="@string/crime_report_text"/>
+
 </LinearLayout>
