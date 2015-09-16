@@ -10,12 +10,19 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+
+
+    private String mSuspect;
+
     // TODO -- Index add
 
-    public Crime(){ // purpose is to initialize variables
-        // Generate unique id
-        mId= UUID.randomUUID();
-        mDate= new Date();
+    public Crime(){ // new one
+        this(UUID.randomUUID());
+    }
+
+    public Crime(UUID id){ // old one
+        mId   =id;
+        mDate =new Date();
     }
 
     public void setTitle(String title) {
@@ -45,4 +52,12 @@ public class Crime {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
+    }
+
 }

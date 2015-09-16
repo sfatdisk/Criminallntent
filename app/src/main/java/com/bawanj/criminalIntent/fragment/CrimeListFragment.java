@@ -66,6 +66,7 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setHasFixedSize(true);
 
         }else{
+            mAdapter.setCrimes(crimes); // refresh the latest data
             mAdapter.notifyDataSetChanged();
             // mAdapter.notifyItemChanged();
         }
@@ -196,6 +197,11 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
+        }
+
     }
 
 }
